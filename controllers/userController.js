@@ -18,13 +18,17 @@ module.exports = {
 
   // newUser,
   async newUser(req, res) {
-    const nwUser = await User.create(req.body);
-    !nwUser
-      ? res.status(500).json(err)
-      : res.json({
-          user: nwUser,
-          message: `New user ${req.body.username} created`,
-        });
+    try {
+      const nwUser = await User.create(req.body);
+      res.json({
+        user: nwUser,
+        message: `New user ${req.body.username} created!`,
+      });
+    } catch (err) {
+      res
+        .status(500)
+        .json({ err, message: "Please use unique email and Username" });
+    }
   },
 
   // deleteUser,
