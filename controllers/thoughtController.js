@@ -13,7 +13,24 @@ module.exports = {
   // newThought,
   async newThought(req, res) {
     const newThought = await Thought.create(req.body);
-    !newThought ? res.status(500).json(err) : res.json(newThought);
+
+    if (!newThought) {
+      res.status(500).json(err);
+    } else {
+      const upUser = await User.findOneAndUpdate(
+        { username: req.body.username },
+        { $addToSet: { thoughts: newThought._id } },
+        { runValidators: true, new: true }
+      );
+      !upUser
+        ? res
+            .status(404)
+            .json({
+              thought: newThought,
+              message: "Thought added, but username not found",
+            })
+        : res.json(newThought);
+    }
   },
 
   // deleteThought,
