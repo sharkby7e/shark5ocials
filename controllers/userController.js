@@ -32,7 +32,21 @@ module.exports = {
   },
 
   // deleteUser,
-  async deleteUser(req, res) {},
+  async deleteUser(req, res) {
+    try {
+      const delUsr = await User.findOneAndDelete({
+        _id: req.params.userId,
+      });
+      console.log(delUsr.username);
+      await Thought.deleteMany({ username: delUsr.username });
+      res.json({
+        user: delUsr,
+        message: "User and associated Thoughts Deleted",
+      });
+    } catch (err) {
+      res.status(500).json({ err, message: "No user found with that Id" });
+    }
+  },
 
   // updateUser,
   async updateUser(req, res) {},
