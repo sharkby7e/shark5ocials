@@ -29,7 +29,7 @@ Alternatively, you can [install](#installation) this application on your own mac
 | Node.js       | JavaScript runtime    |
 | NPM           | Manage node packages  |
 | express       | server                |
-| mongodb       | noSQL db              |
+| mongodb       | noSQL db              | 
 | mongoose      | ODM                   |
 
 
@@ -87,7 +87,9 @@ https://www.github.com/sharkby7e
 
 ## Summary and Learning Points
 
-This application was my first attempt at using mySQL, and the mySQL2 Node package. A tedious and meticulous attention to detail was
-required for this one, and I found myself being quite frustrated at times, especially having to implement asynchonous code blocks in order
-for the application to fully function. I would like to add more features in the future, and definitely would like to refactor the whole thing
-to include classes.
+An introduction to mongoose ODM in order to use the NoSQL database, MONGODB.
+A different approach to organizing data, MongoDB provides flexibility for data, as data 
+does not need to conform to certain schema. It also prevents the need to do complicated migrations 
+when data fields need to change. I feel like the cost was a level of order/I felt lost at times,
+when even going one or two levels deep into documents referring to each other. I think i definitely
+prefer the SQL databases we've been working with. 
