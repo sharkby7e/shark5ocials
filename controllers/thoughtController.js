@@ -77,8 +77,30 @@ module.exports = {
   },
 
   // addReaction,
-  async addReaction(req, res) {},
+  async addReaction(req, res) {
+    try {
+      await Thought.findOneAndUpdate(
+        { _id: req.params.thoughtId },
+        { $addToSet: { reactions: req.body } },
+        { runValidators: true, new: true }
+      );
+      res.status(200).json({ message: "Reaction added to Thought" });
+    } catch (err) {
+      res.status(404).json({ err, message: "No Thought found with  Id" });
+    }
+  },
 
   // deleteReaction,
-  async deleteReaction(req, res) {},
+  async deleteReaction(req, res) {
+    try {
+      await Thought.findOneAndUpdate(
+        { _id: req.params.thoughtId },
+        { $pull: { reactions: { reactionId: req.params.reactionId } } },
+        { runValidators: true, new: true }
+      );
+      res.status(200).json({ message: "Reaction Deleted from Thought" });
+    } catch (err) {
+      res.status(404).json({ err, message: "No Thought found with  Id" });
+    }
+  },
 };
