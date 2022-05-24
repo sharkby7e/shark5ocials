@@ -12,7 +12,7 @@ module.exports = {
     const usr = await User.findOne({ _id: req.params.userId })
       .select({ __v: 0 })
       .populate({ path: "thoughts", select: { __v: 0, username: 0 } })
-      .populate({ path: "friends" });
+      .populate({ path: "friends", select: { __v: 0, friends: 0 } });
     !usr ? res.status(404).json("No User Found") : res.json(usr);
   },
 
@@ -37,23 +37,57 @@ module.exports = {
       const delUsr = await User.findOneAndDelete({
         _id: req.params.userId,
       });
-      console.log(delUsr.username);
       await Thought.deleteMany({ username: delUsr.username });
       res.json({
         user: delUsr,
         message: "User and associated Thoughts Deleted",
       });
     } catch (err) {
-      res.status(500).json({ err, message: "No user found with that Id" });
+      res.status(404).json({ err, message: "No User found with that Id" });
     }
   },
 
   // updateUser,
-  async updateUser(req, res) {},
+  async updateUser(req, res) {
+    try {
+      const upUsr = await User.findOneAndUpdate(
+        { _id: req.params.userId },
+        { $set: req.body },
+        { runValidators: true, new: true }
+      );
+      res
+        .status(200)
+        .json({ message: `${upUsr.username} updated`, user: upUsr });
+    } catch (err) {
+      res.status(404).json({ err, message: "No user found with that Id" });
+    }
+  },
 
   // addFriend,
-  async addFriend(req, res) {},
+  async addFriend(req, res) {
+    try {
+      await User.findOneAndUpdate(
+        { _id: req.params.userId },
+        { $addToSet: { friends: req.params.friendId } },
+        { runValidators: true, new: true }
+      );
+      res.status(200).json({ message: "Friend added to user" });
+    } catch (err) {
+      res.status(404).json({ err, message: "No user found with  Id" });
+    }
+  },
 
   // deleteFriend,
-  async deleteFriend(req, res) {},
+  async deleteFriend(req, res) {
+    try {
+      await User.findOneAndUpdate(
+        { _id: req.params.userId },
+        { $pull: { friends: req.params.friendId } },
+        { runValidators: true, new: true }
+      );
+      res.status(200).json({ message: "Friend deleted from user" });
+    } catch (err) {
+      res.status(404).json({ err, message: "No user found with  Id" });
+    }
+  },
 };
